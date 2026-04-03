@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS jippy_fm.merchants
 	created_by integer,
 	updated_at TIMESTAMP,
 	updated_by integer,
-	is_active character varying(1) DEFAULT 'Y',,
+	is_active character varying(1) DEFAULT 'Y',
     CONSTRAINT merchants_pkey PRIMARY KEY (merchant_id),
     CONSTRAINT merchant_email UNIQUE (merchant_email),
     CONSTRAINT merchant_phone UNIQUE (merchant_phone)
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS jippy_fm.merchant_bank_details
     created_by integer,
     updated_at TIMESTAMP,
     updated_by integer,
-    CONSTRAINT "merchant_bank_details _pkey" PRIMARY KEY ("bank_id "),
+    CONSTRAINT "merchant_bank_details _pkey" PRIMARY KEY (bank_id),
     CONSTRAINT merchant_id_merchant_fk_key FOREIGN KEY (merchant_id)
         REFERENCES jippy_fm.merchants (merchant_id)
         ON UPDATE NO ACTION
@@ -100,8 +100,8 @@ CREATE TABLE IF NOT EXISTS jippy_fm.employees
     created_by integer,
     updated_at timestamp without time zone,
     updated_by integer,
-    is_active character varying(1) DEFAULT 'Y'
-    CONSTRAINT employess_pkey PRIMARY KEY (employee_id)
+    is_active character varying(1) DEFAULT 'Y',
+    CONSTRAINT employees_pkey PRIMARY KEY (employee_id)
 );
 
 CREATE TABLE IF NOT EXISTS jippy_fm.permissions
@@ -138,8 +138,8 @@ CREATE TABLE IF NOT EXISTS jippy_fm.users
     created_by integer,
     updated_at timestamp without time zone,
     updated_by integer,
-    is_active character varying(1) DEFAULT 'Y'
-    type character varying(50),
+    is_active character varying(1) DEFAULT 'Y',
+    user_type character varying(50),
     CONSTRAINT users_pkey PRIMARY KEY (user_id),
     CONSTRAINT "user-role-fk_key" FOREIGN KEY (role_id)
         REFERENCES jippy_fm.roles (role_id)
@@ -235,11 +235,7 @@ CREATE TABLE IF NOT EXISTS jippy_fm.address
     created_by integer,
     updated_at timestamp without time zone,
     updated_by integer,
-    CONSTRAINT outlet_address_pkey PRIMARY KEY (outlet_id),
-    CONSTRAINT outlet_address_outlet_fk_key FOREIGN KEY (outlet_id)
-        REFERENCES jippy_fm.outlets (outlet_id)
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    CONSTRAINT outlet_address_pkey PRIMARY KEY (outlet_id)
 );
 
 CREATE TABLE IF NOT EXISTS jippy_fm.days_of_week
@@ -298,10 +294,10 @@ CREATE TABLE IF NOT EXISTS jippy_fm.outlet_categories
             REFERENCES jippy_fm.outlets (outlet_id)
             ON UPDATE NO ACTION
             ON DELETE NO ACTION,
-     ADD CONSTRAINT outlet_category_category_fk_key FOREIGN KEY (category_id)
+     CONSTRAINT outlet_category_category_fk_key FOREIGN KEY (category_id)
              REFERENCES jippy_fm.categories (category_id)
              ON UPDATE NO ACTION
-             ON DELETE NO ACTION;
+             ON DELETE NO ACTION
 );
 
 CREATE TABLE IF NOT EXISTS jippy_fm.products
@@ -319,12 +315,8 @@ CREATE TABLE IF NOT EXISTS jippy_fm.products
     updated_at timestamp without time zone,
     updated_by integer,
     CONSTRAINT products_pkey PRIMARY KEY (product_id),
-     CONSTRAINT product_outlet_fk_key FOREIGN KEY (outlet_id)
-            REFERENCES jippy_fm.outlets (outlet_id)
-            ON UPDATE NO ACTION
-            ON DELETE NO ACTION,
-     CONSTRAINT product_categories_fk_key FOREIGN KEY (category_id)
-                 REFERENCES jippy_fm.categories (category_id)
+     CONSTRAINT product_outlet_categories_fk_key FOREIGN KEY (outlet_category_id)
+                 REFERENCES jippy_fm.outlet_categories (outlet_category_id)
                  ON UPDATE NO ACTION
                  ON DELETE NO ACTION
 );
