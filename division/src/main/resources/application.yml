@@ -4,14 +4,16 @@ spring:
   application:
     name: division
   datasource:
-    url: jdbc:postgresql://localhost:5432/jippy_division
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
+    properties:
+     hibernate:
+      default_schema: jippy_division
       ddl-auto: update
     show-sql: true
 
