@@ -1,4 +1,9 @@
 package com.jippy.division.service;
 
-public class ICouponService {
+import com.jippy.division.dto.CouponDto;
+
+public interface ICouponService {
+
+    public void createCoupon(CouponDto couponDto);
+
 }

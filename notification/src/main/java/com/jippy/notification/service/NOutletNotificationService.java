@@ -1,6 +1,7 @@
 package com.jippy.notification.service;
 
-import com.google.firebase.messaging.*;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import com.jippy.notification.dto.NOrderEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ public class NOutletNotificationService {
     public void sendNewOrderNotification(NOrderEvent orderEvent) {
 
         String outletTopic = "outlet_" + orderEvent.getOutletId();
-        //logger.info("===================="+outletTopic);
+        logger.info("===================="+outletTopic);
 
         Message message = Message.builder()
                 .setTopic(outletTopic)
