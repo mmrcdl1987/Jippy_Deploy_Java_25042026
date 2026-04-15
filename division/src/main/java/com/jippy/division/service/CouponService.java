@@ -1,37 +1,140 @@
 package com.jippy.division.service;
 
-import com.jippy.division.dto.CouponDto;
-import com.jippy.division.entity.Coupon;
-import com.jippy.division.exception.CouponCodeAlreadyExistsException;
-import com.jippy.division.mapper.CouponMapper;
-import com.jippy.division.repositary.CouponRepository;
-import com.jippy.division.repositary.CouponRepository;
+import com.jippy.division.dto.DivCouponRequestDto;
+import com.jippy.division.dto.DivCouponResponseDto;
+import com.jippy.division.entity.DivCoupon;
+import com.jippy.division.exception.DivCouponAlreadyExistsException;
+import com.jippy.division.exception.DivInvalidDateException;
+import com.jippy.division.exception.DivResourceNotFoundException;
+import com.jippy.division.mapper.DivCouponMapper;
+import com.jippy.division.repositary.DivCouponRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class CouponService implements ICouponService{
 
     @Autowired
-    public CouponRepository couponRepository;
+    private  DivCouponRepository repository;
 
-    private static final Logger logger = LoggerFactory.getLogger(CouponService.class);
+    private static final Logger log = LoggerFactory.getLogger(CouponService.class);
+
 
     @Override
-    public void createCoupon(CouponDto couponDto) {
-        logger.info("Inside CouponService createCoupon method with request: ");
+    public void createCoupon(DivCouponRequestDto dto) {
 
-        Coupon couponEntity = CouponMapper.mapToEntity(couponDto);
-        Optional<Coupon> optionalCoupon =  couponRepository.findByCouponCode(couponDto.getCouponCode());
-       if(optionalCoupon.isPresent()){
-           throw new CouponCodeAlreadyExistsException("Coupon already exists with given code, " +
-                   "Please give some other code");
-       }
-        Coupon savedCoupon = couponRepository.save(couponEntity);
+        log.info("Service createCoupon started for code={}", dto.getCouponCode());
+        validateCouponNotExists(dto.getCouponCode());
+        validateDates(dto);
+        validateDiscount(dto);
+        DivCoupon coupon = DivCouponMapper.toEntity(new DivCoupon(),dto);
+        repository.save(coupon);
 
+        log.info("Service createCoupon success for code={}", dto.getCouponCode());
+    }
+
+
+
+    @Override
+    public void updateCoupon(DivCouponRequestDto divCouponRequestDto) {
+
+        log.info("Service updateCoupon started id={}", divCouponRequestDto.getCouponId());
+
+        DivCoupon coupon = fetchCouponById(divCouponRequestDto.getCouponId());
+        coupon.setUpdatedAt(LocalDateTime.now());
+         DivCouponMapper.toEntity(coupon,divCouponRequestDto);
+        repository.save(coupon);
+
+        log.info("Service updateCoupon success id={}",divCouponRequestDto.getCouponId());
+    }
+
+    @Override
+    public void disableCoupon(Integer couponId) {
+
+        log.info("Service disableCoupon started id={}", couponId);
+
+        DivCoupon coupon = fetchCouponById(couponId);
+
+        coupon.setIsActive(false);
+
+        repository.save(coupon);
+
+        log.info("Service disableCoupon success id={}", couponId);
+    }
+
+    @Override
+    public void enableCoupon(Integer couponId) {
+
+        log.info("Service enableCoupon started id={}", couponId);
+
+        DivCoupon coupon = fetchCouponById(couponId);
+
+        coupon.setIsActive(true);
+
+        repository.save(coupon);
+
+        log.info("Service enableCoupon success id={}", couponId);
+    }
+
+
+    @Override
+    public List<DivCouponResponseDto> getAllCoupons(int page, int size) {
+
+        log.info("Service getAllCoupons started page={} size={}", page, size);
+
+        PageRequest pageable = PageRequest.of(page, size);
+
+        List<DivCouponResponseDto> list = repository.findAll(pageable)
+                .stream()
+                .map(DivCouponMapper::toDTO)
+                .toList();
+
+        log.info("Service getAllCoupons success count={}", list.size());
+
+        return list;
+    }
+
+    // HELPER METHODS
+
+    private void validateCouponNotExists(String code) {
+
+        repository.findByCouponCode(code)
+                .ifPresent(c -> {
+                    log.error("Coupon already exists code={}", code);
+                    throw new DivCouponAlreadyExistsException("Coupon already exists with code");
+                });
+    }
+
+    private DivCoupon fetchCouponById(Integer couponId) {
+
+        return repository.findById(couponId)
+                .orElseThrow(() -> {
+                    log.error("Coupon not found id={}", couponId);
+                    return new DivResourceNotFoundException("Coupon not found");
+                });
+    }
+    private void validateDates(DivCouponRequestDto dto) {
+
+        if (dto.getStartDate() != null && dto.getEndDate() != null &&
+                dto.getStartDate().isAfter(dto.getEndDate())) {
+
+            log.error("Invalid date range start={} end={}",
+                    dto.getStartDate(), dto.getEndDate());
+
+            throw new DivInvalidDateException("Start date cannot be after end date");        }
+    }
+    private void validateDiscount(DivCouponRequestDto dto) {
+
+        if (dto.getDiscountValue() != null && dto.getMinOrderValue() != null &&
+                dto.getDiscountValue() > dto.getMinOrderValue()) {
+
+            throw new IllegalArgumentException("Discount cannot exceed minimum order value");
+        }
     }
 }

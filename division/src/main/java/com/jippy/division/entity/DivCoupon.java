@@ -1,7 +1,6 @@
 package com.jippy.division.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -9,7 +8,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "coupons")
 @Data
-public class Coupon {
+public class DivCoupon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +18,23 @@ public class Coupon {
     @Column(name = "coupon_code")
     private String couponCode;
 
+    @Column(name = "application_type")
+    private Integer applicationType;
+
     @Column(name = "price_model_id")
     private Integer priceModelId;
 
-    @Column(name = "max_discount")
-    private Double maxDiscount;
+    @Column(name = "min_order_value")
+    private Double minOrderValue;
+
+    @Column(name = "discount_value")
+    private Double discountValue;
+
+    @Column(name = "payment_method")
+    private Integer paymentMethod;
+
+    @Column(name = "usage_limit_per_user")
+    private Integer usageLimitPerUser;
 
     @Column(name = "is_active")
     private Boolean isActive;
