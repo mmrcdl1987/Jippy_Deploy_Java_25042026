@@ -33,13 +33,13 @@ public class DivCouponController {
      * API to create a new coupon
      */
     @PostMapping
-    public ResponseEntity<DivResponseDto> createCoupon(@Valid @RequestBody DivCouponRequestDto dto) {
+    public ResponseEntity<DivResponseDto> createCoupon(@Valid @RequestBody DivCouponRequestDto couponRequestDto) {
 
-        logger.info("API createCoupon initiated for code={}", dto.getCouponCode());
+        logger.info("API createCoupon initiated for code={}", couponRequestDto.getCouponCode());
 
-        couponService.createCoupon(dto);
+        couponService.createCoupon(couponRequestDto);
 
-        logger.info("API createCoupon success for code={}", dto.getCouponCode());
+        logger.info("API createCoupon success for code={}", couponRequestDto.getCouponCode());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new DivResponseDto(DivAppConstants.STATUS_201, "Coupon created successfully"));
@@ -63,14 +63,14 @@ public class DivCouponController {
     /**
      * API to disable coupon
      */
-    @PatchMapping("/{id}/disable")
-    public ResponseEntity<DivResponseDto> disableCoupon(@PathVariable Integer id) {
+    @PatchMapping("/disable/{couponId}")
+    public ResponseEntity<DivResponseDto> disableCoupon(@PathVariable Integer couponId) {
 
-        logger.info("API disableCoupon initiated id={}", id);
+        logger.info("API disableCoupon initiated id={}", couponId);
 
-        couponService.disableCoupon(id);
+        couponService.disableCoupon(couponId);
 
-        logger.info("API disableCoupon success id={}", id);
+        logger.info("API disableCoupon success id={}", couponId);
 
         return ResponseEntity.ok(new DivResponseDto(DivAppConstants.STATUS_200, "Coupon disabled"));
     }
@@ -78,14 +78,14 @@ public class DivCouponController {
      * API to enable coupon
      */
 
-    @PatchMapping("/{id}/enable")
-    public ResponseEntity<DivResponseDto> enableCoupon(@PathVariable Integer id) {
+    @PatchMapping("/enable/{couponId}")
+    public ResponseEntity<DivResponseDto> enableCoupon(@PathVariable Integer couponId) {
 
-        logger.info("API enableCoupon initiated id={}", id);
+        logger.info("API enableCoupon initiated id={}", couponId);
 
-        couponService.enableCoupon(id);
+        couponService.enableCoupon(couponId);
 
-        logger.info("API enableCoupon success id={}", id);
+        logger.info("API enableCoupon success id={}", couponId);
 
         return ResponseEntity.ok(
                 new DivResponseDto(DivAppConstants.STATUS_200, "Coupon enabled"));

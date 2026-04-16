@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ICouponService {
 
-    void createCoupon(DivCouponRequestDto dto);
+    void createCoupon(DivCouponRequestDto couponRequestDto);
 
     void updateCoupon(DivCouponRequestDto divCouponRequestDto);
 

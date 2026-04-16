@@ -21,22 +21,22 @@ import java.util.List;
 public class CouponService implements ICouponService{
 
     @Autowired
-    private  DivCouponRepository repository;
+    private  DivCouponRepository couponRepository;
 
     private static final Logger log = LoggerFactory.getLogger(CouponService.class);
 
 
     @Override
-    public void createCoupon(DivCouponRequestDto dto) {
+    public void createCoupon(DivCouponRequestDto couponRequestDto) {
 
-        log.info("Service createCoupon started for code={}", dto.getCouponCode());
-        validateCouponNotExists(dto.getCouponCode());
-        validateDates(dto);
-        validateDiscount(dto);
-        DivCoupon coupon = DivCouponMapper.toEntity(new DivCoupon(),dto);
-        repository.save(coupon);
+        log.info("Service createCoupon started for code={}", couponRequestDto.getCouponCode());
+        validateCouponNotExists(couponRequestDto.getCouponCode());
+        validateDates(couponRequestDto);
+        validateDiscount(couponRequestDto);
+        DivCoupon coupon = DivCouponMapper.toEntity(new DivCoupon(),couponRequestDto);
+        couponRepository.save(coupon);
 
-        log.info("Service createCoupon success for code={}", dto.getCouponCode());
+        log.info("Service createCoupon success for code={}", couponRequestDto.getCouponCode());
     }
 
 
@@ -49,7 +49,7 @@ public class CouponService implements ICouponService{
         DivCoupon coupon = fetchCouponById(divCouponRequestDto.getCouponId());
         coupon.setUpdatedAt(LocalDateTime.now());
          DivCouponMapper.toEntity(coupon,divCouponRequestDto);
-        repository.save(coupon);
+        couponRepository.save(coupon);
 
         log.info("Service updateCoupon success id={}",divCouponRequestDto.getCouponId());
     }
@@ -63,7 +63,7 @@ public class CouponService implements ICouponService{
 
         coupon.setIsActive(false);
 
-        repository.save(coupon);
+        couponRepository.save(coupon);
 
         log.info("Service disableCoupon success id={}", couponId);
     }
@@ -77,7 +77,7 @@ public class CouponService implements ICouponService{
 
         coupon.setIsActive(true);
 
-        repository.save(coupon);
+        couponRepository.save(coupon);
 
         log.info("Service enableCoupon success id={}", couponId);
     }
@@ -90,7 +90,7 @@ public class CouponService implements ICouponService{
 
         PageRequest pageable = PageRequest.of(page, size);
 
-        List<DivCouponResponseDto> list = repository.findAll(pageable)
+        List<DivCouponResponseDto> list = couponRepository.findAll(pageable)
                 .stream()
                 .map(DivCouponMapper::toDTO)
                 .toList();
@@ -104,7 +104,7 @@ public class CouponService implements ICouponService{
 
     private void validateCouponNotExists(String code) {
 
-        repository.findByCouponCode(code)
+        couponRepository.findByCouponCode(code)
                 .ifPresent(c -> {
                     log.error("Coupon already exists code={}", code);
                     throw new DivCouponAlreadyExistsException("Coupon already exists with code");
@@ -113,7 +113,7 @@ public class CouponService implements ICouponService{
 
     private DivCoupon fetchCouponById(Integer couponId) {
 
-        return repository.findById(couponId)
+        return couponRepository.findById(couponId)
                 .orElseThrow(() -> {
                     log.error("Coupon not found id={}", couponId);
                     return new DivResourceNotFoundException("Coupon not found");
