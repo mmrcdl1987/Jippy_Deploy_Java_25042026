@@ -4,12 +4,14 @@ spring:
   application:
     name: food and mart
   datasource:
-    url: jdbc:postgresql://localhost:5432/jippy_fm
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: root
+    password: root
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
+    properties:
+      hibernate:
+        default_schema: jippy_fm
         ddl-auto: update
     show-sql: true
