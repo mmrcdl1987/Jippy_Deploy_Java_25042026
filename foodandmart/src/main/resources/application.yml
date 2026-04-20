@@ -4,12 +4,23 @@ spring:
   application:
     name: food and mart
   datasource:
-    url: jdbc:postgresql://localhost:5432/jippy_fm
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
+    properties:
+      hibernate:
+        default_schema: jippy_division
         ddl-auto: update
     show-sql: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/

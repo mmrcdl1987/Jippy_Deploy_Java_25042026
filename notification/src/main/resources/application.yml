@@ -34,3 +34,12 @@ spring:
   app:
     firebase:
       config-path: classpath:jippy-firebase-key.json
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
