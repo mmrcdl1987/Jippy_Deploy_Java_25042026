@@ -1,6 +1,7 @@
 package com.jippy.foodandmart.serviceImpl;
 
 
+import com.jippy.foodandmart.dto.DivPriceModelDto;
 import com.jippy.foodandmart.dto.FmAreaDto;
 import com.jippy.foodandmart.dto.FmCityDto;
 import com.jippy.foodandmart.dto.FmStateDto;
@@ -8,6 +9,7 @@ import com.jippy.foodandmart.entity.FmArea;
 import com.jippy.foodandmart.entity.FmCity;
 import com.jippy.foodandmart.entity.FmState;
 import com.jippy.foodandmart.exception.ResourceNotFoundException;
+import com.jippy.foodandmart.feignClients.DivisionFeignClient;
 import com.jippy.foodandmart.mapper.FmLocationMapper;
 import com.jippy.foodandmart.repository.FmAreaRepository;
 import com.jippy.foodandmart.repository.FmCityRepository;
@@ -16,6 +18,7 @@ import com.jippy.foodandmart.service.IFmLocationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,6 +39,9 @@ public class FmLocationServiceImpl implements IFmLocationService {
     @Autowired
     private FmAreaRepository areaRepository;
 
+    @Autowired
+    private DivisionFeignClient priceModelFeignClient;
+
     //  Fetch all states
     @Override
     public List<FmStateDto> fetchStates() {
@@ -44,6 +50,14 @@ public class FmLocationServiceImpl implements IFmLocationService {
 
         List<FmState> states = stateRepository.findAll();
         List<FmStateDto> stateDtoList = new ArrayList<>();
+
+
+        ResponseEntity<List<DivPriceModelDto>> priceModelDtoListResponse = priceModelFeignClient.getPriceModels();
+        List<DivPriceModelDto> priceModelDtoList = priceModelDtoListResponse.getBody();
+        for(DivPriceModelDto divPriceModelDto:priceModelDtoList){
+            logger.info("PriceModelId : {} ", divPriceModelDto.getPriceModelId());
+            logger.info("PriceModelName : {} ", divPriceModelDto.getPriceModelName());
+        }
 
         if (states != null && !states.isEmpty()) {
             for (FmState  state : states) {

@@ -1,13 +1,17 @@
-package com.jippy.division.service;
+package com.jippy.division.serviceImpl;
 
+import com.jippy.division.dto.DivPriceModelDto;
 import com.jippy.division.dto.DivCouponRequestDto;
 import com.jippy.division.dto.DivCouponResponseDto;
 import com.jippy.division.entity.DivCoupon;
+import com.jippy.division.entity.DivPriceModel;
 import com.jippy.division.exception.DivCouponAlreadyExistsException;
 import com.jippy.division.exception.DivInvalidDateException;
 import com.jippy.division.exception.DivResourceNotFoundException;
 import com.jippy.division.mapper.DivCouponMapper;
 import com.jippy.division.repositary.DivCouponRepository;
+import com.jippy.division.repositary.DivPriceModelRepository;
+import com.jippy.division.service.ICouponService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +22,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class CouponService implements ICouponService{
+public class CouponService implements ICouponService {
 
     @Autowired
     private  DivCouponRepository couponRepository;
+
+    @Autowired
+    private DivPriceModelRepository priceModelRepository;
 
     private static final Logger log = LoggerFactory.getLogger(CouponService.class);
 
@@ -136,5 +143,18 @@ public class CouponService implements ICouponService{
 
             throw new IllegalArgumentException("Discount cannot exceed minimum order value");
         }
+    }
+
+
+    @Override
+    public List<DivPriceModelDto> getAllPricelModels() {
+        List<DivPriceModel> priceModelList = priceModelRepository.findAll();
+        List<DivPriceModelDto> priceModelDtoList = List.of();
+        if(!priceModelList.isEmpty()){
+           priceModelDtoList =  DivCouponMapper.topriceDto(priceModelList);
+        }else{
+            throw new DivResourceNotFoundException("Price models are not available");
+        }
+        return  priceModelDtoList;
     }
 }
