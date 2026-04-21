@@ -5,14 +5,17 @@ spring:
     name: food and mart
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
+
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
     properties:
       hibernate:
-        default_schema: jippy_division
+        default_schema: jippy_fm
         ddl-auto: update
     show-sql: true
 
