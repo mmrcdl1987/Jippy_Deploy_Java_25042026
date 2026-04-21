@@ -21,7 +21,7 @@ public class FmMerchantBankDetails {
 
     /** Renamed from merchant_id; holds merchantId, driverId, etc. */
     @Column(name = "recipient_id", nullable = false)
-    private Long recipientId;
+    private Integer recipientId;
 
     @Column(name = "account_number", length = 30)
     private String accountNumber;

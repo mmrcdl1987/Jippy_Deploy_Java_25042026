@@ -19,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class FmMerchantServiceImpl implements IFmMerchantService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(FmMerchantServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(FmMerchantServiceImpl.class);
 
     @Autowired
     private FmMerchantRepository merchantRepository;
@@ -33,13 +33,10 @@ public class FmMerchantServiceImpl implements IFmMerchantService {
     //    get only merchant
     public FmMerchantDto getMerchantProfile(int merchantId) {
         logger.info("Fetching merchant profile for merchantId: {}", merchantId);
-        FmMerchant merchant = merchantRepository.findById(merchantId)
-                .orElseThrow(() -> {
-                    logger.error("Merchant not found with id: {}", merchantId);
-                    return new ResourceNotFoundException(
-                            "Merchant not found with id: " + merchantId
-                    );
-                });
+        FmMerchant merchant = merchantRepository.findById(merchantId).orElseThrow(() -> {
+            logger.error("Merchant not found with id: {}", merchantId);
+            return new ResourceNotFoundException("Merchant not found with id: " + merchantId);
+        });
 
         logger.info("Merchant fetched successfully for merchantId: {}", merchantId);
 
@@ -50,8 +47,7 @@ public class FmMerchantServiceImpl implements IFmMerchantService {
     @Override
     public FmMerchantWithBankDto getMerchantWithBank(Long merchantId) {
         logger.info("Fetching merchant with bank details for merchantId: {}", merchantId);
-        FmMerchantWithBankProjection data =
-                merchantRepository.getMerchantWithBank(merchantId);
+        FmMerchantWithBankProjection data = merchantRepository.getMerchantWithBank(merchantId);
         if (data == null) {
             logger.error("Merchant with bank details not found for merchantId: {}", merchantId);
             throw new ResourceNotFoundException("Merchant not found with :" + merchantId);
@@ -68,13 +64,10 @@ public class FmMerchantServiceImpl implements IFmMerchantService {
         logger.info("Updating merchant profile for merchantId: {}", dto.getMerchantId());
         logger.debug("Request DTO: {}", dto);
         // 1. Fetch Merchant
-        FmMerchant merchant = merchantRepository.findById(dto.getMerchantId().intValue())
-                .orElseThrow(() -> {
-                    logger.error("Merchant not found with ID: {}", dto.getMerchantId());
-                    return new ResourceNotFoundException(
-                            "Merchant not found with ID :" + dto.getMerchantId()
-                    );
-                });
+        FmMerchant merchant = merchantRepository.findById(dto.getMerchantId().intValue()).orElseThrow(() -> {
+            logger.error("Merchant not found with ID: {}", dto.getMerchantId());
+            return new ResourceNotFoundException("Merchant not found with ID :" + dto.getMerchantId());
+        });
 
         // 2. Update Merchant fields by using lombok -getters and setters(data)s
         merchant.setMerchantName(dto.getMerchantName());
@@ -88,32 +81,28 @@ public class FmMerchantServiceImpl implements IFmMerchantService {
 
         // 3. Fetch Bank Details
         FmMerchantBankDetails bank = fmMerchantBankDetailsRepository
-                .findByRecipientIdAndUserType(dto.getMerchantId(), "merchant")
-                .orElseThrow(() -> {
-                    logger.error("Bank details not found for merchantId: {}", dto.getMerchantId());
-                    return new ResourceNotFoundException("Bank details not found");
-                });
-        // 4.Duplicate account check if already exists
+                .findByRecipientIdAndUserType(dto.getMerchantId(), "MERCHANT")
+                .orElseThrow(() -> new ResourceNotFoundException("Bank details not found"));
+
+// 4. Duplicate account check
         if (!bank.getAccountNumber().equals(dto.getAccountNumber()) &&
                 fmMerchantBankDetailsRepository.existsByAccountNumber(dto.getAccountNumber())) {
 
-            logger.error("Duplicate account number found: {}", dto.getAccountNumber());
             throw new DuplicateResourceException("Account number already exists");
         }
-        // 5. Update Bank fields
-        bank.setRecipientId(dto.getMerchantId()); // important mapping
+
+// 5. Update Bank fields
         bank.setAccountNumber(dto.getAccountNumber());
         bank.setIfscCode(dto.getIfscCode());
         bank.setBankName(dto.getBankName());
         bank.setAccountHolderName(dto.getAccountHolderName());
-        bank.setUserType("merchant"); // keep consistent
+        bank.setUserType("MERCHANT");
 
         fmMerchantBankDetailsRepository.save(bank);
         logger.info("Bank details updated successfully for merchantId: {}", dto.getMerchantId());
 
         // 6. Returning updated combined [merchant + Bank] data using mapper
-        FmMerchantWithBankDto response =
-                getMerchantWithBank(dto.getMerchantId());
+        FmMerchantWithBankDto response = getMerchantWithBank(dto.getMerchantId());
 
         logger.info("Returning updated merchant + bank response for merchantId: {}", dto.getMerchantId());
 

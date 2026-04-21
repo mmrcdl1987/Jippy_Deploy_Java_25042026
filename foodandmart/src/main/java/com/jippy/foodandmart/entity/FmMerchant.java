@@ -16,6 +16,7 @@ public class FmMerchant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "merchant_id")
     private Integer merchantId;
 
     @Column(name = "merchant_name", length = 150)

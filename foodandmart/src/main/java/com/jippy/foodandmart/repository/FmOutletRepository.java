@@ -2,6 +2,7 @@ package com.jippy.foodandmart.repository;
 
 
 import com.jippy.foodandmart.entity.FmOutlet;
+import com.jippy.foodandmart.projections.FmOutletByMerchantProjection;
 import com.jippy.foodandmart.projections.FmOutletMenuProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -117,4 +118,49 @@ public interface FmOutletRepository extends JpaRepository<FmOutlet, Integer> {
                            pat.start_time;
             """, nativeQuery = true)
     List<FmOutletMenuProjection> getOutletMenu(@Param("outletId") Integer outletId);
+
+    //    for getOutletsByMerchant API - to fetch-
+//    -outlet's, address-state,city,area details based on merchantId
+    @Query(value = """
+                -- Fetch outlet details along with location information for a given merchant
+            
+                SELECT
+                    -- Basic outlet details
+                    o.outlet_id AS outletId,
+                    o.outlet_name AS outletName,
+                    o.outlet_phone AS outletPhone,
+                    o.is_approved AS isApproved,
+            
+                    -- Location details (may be NULL if address not present)
+                    s.state_name AS stateName,
+                    c.city_name AS cityName,
+                    a.area_name AS areaName
+            
+                -- Main source table: outlets
+                FROM jippy_fm.outlets o
+            
+                -- Map outlet to address (JOIN ensures all outlets are returned even if address is missing)
+                 LEFT JOIN jippy_fm.address addr
+                    ON o.outlet_id = addr.jippy_address_id 
+                    AND addr.address_type = 'OUTLET'
+            
+                -- Fetch state based on address
+                LEFT JOIN jippy_fm.state s
+                    ON addr.state_id = s.state_id
+            
+                -- Fetch city based on address
+                 LEFT JOIN jippy_fm.city c
+                    ON addr.city_id = c.city_id
+            
+                -- Fetch area based on address
+                 LEFT JOIN jippy_fm.area a
+                    ON addr.area_id = a.area_id
+            
+                -- Filter outlets by merchant
+                WHERE o.merchant_id = :merchantId --for Api response @query
+                 --WHERE o.merchant_id = :1 -- for postgres SQL testing used
+            """, nativeQuery = true)
+    List<FmOutletByMerchantProjection> getOutletsByMerchantId(
+            @Param("merchantId") Integer merchantId
+    );
 }

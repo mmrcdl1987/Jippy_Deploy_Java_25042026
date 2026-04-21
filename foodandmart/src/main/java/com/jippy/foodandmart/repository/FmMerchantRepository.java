@@ -27,7 +27,7 @@ public interface FmMerchantRepository extends JpaRepository<FmMerchant, Integer>
             FROM jippy_fm.merchants m
              JOIN jippy_fm.user_bank_details u
                 ON u.recipient_id = m.merchant_id
-                AND u.user_type = 'merchant'
+                AND u.user_type = 'MERCHANT'
             WHERE m.merchant_id = :merchantId
             """, nativeQuery = true)
 //     for fetching bank details from the Merchant-table

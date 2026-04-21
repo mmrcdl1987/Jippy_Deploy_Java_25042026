@@ -2,6 +2,7 @@ package com.jippy.foodandmart.mapper;
 
 
 import com.jippy.foodandmart.dto.*;
+import com.jippy.foodandmart.projections.FmOutletByMerchantProjection;
 import com.jippy.foodandmart.projections.FmOutletMenuProjection;
 import lombok.extern.slf4j.Slf4j;
 
@@ -126,4 +127,39 @@ public class FmOutletMapper {
 
         return outlet;
     }
+    //    for mapping the outlet details based on merchant id
+//    (from FmOutletByMerchantProjection to FmOutletByMerchantDto)
+//    for getOutletsByMerchant API - to fetch outlet's, address-state,city,area details
+    public static List<FmOutletByMerchantDto> mapToOutletByMerchantDto(List<FmOutletByMerchantProjection> rows) {
+
+        log.debug("Mapping {} All outlet rows", rows.size());
+
+        List<FmOutletByMerchantDto> outletByMerchantListDto = new ArrayList<>();
+
+
+        for (FmOutletByMerchantProjection row : rows) {
+
+            if (row != null) {
+
+
+                FmOutletByMerchantDto outletByMerchantDto = new FmOutletByMerchantDto();
+
+                outletByMerchantDto.setOutletId(row.getOutletId());
+                outletByMerchantDto.setOutletName(row.getOutletName());
+                outletByMerchantDto.setOutletPhone(row.getOutletPhone());
+                outletByMerchantDto.setIsApproved(row.getIsApproved());
+
+                outletByMerchantDto.setStateName(row.getStateName());
+                outletByMerchantDto.setCityName(row.getCityName());
+                outletByMerchantDto.setAreaName(row.getAreaName());
+
+                outletByMerchantListDto.add(outletByMerchantDto);
+            }
+        }
+
+        log.debug("Mapping completed for {} all outlets and locations", outletByMerchantListDto.size());
+
+        return outletByMerchantListDto;
+    }
+
 }

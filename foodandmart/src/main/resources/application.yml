@@ -8,10 +8,14 @@ spring:
     username: root
     password: root
     driver-class-name: org.postgresql.Driver
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+    hibernate:
+      ddl-auto: update
+
     properties:
       hibernate:
         default_schema: jippy_fm
-        ddl-auto: update
-    show-sql: true
