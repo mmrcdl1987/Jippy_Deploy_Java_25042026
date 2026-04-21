@@ -5,17 +5,25 @@ spring:
     name: food and mart
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-    username: root
-    password: root
+
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-
-    hibernate:
-      ddl-auto: update
 
     properties:
       hibernate:
         default_schema: jippy_fm
+        ddl-auto: update
+    show-sql: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/

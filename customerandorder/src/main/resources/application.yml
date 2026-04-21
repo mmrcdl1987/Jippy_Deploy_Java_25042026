@@ -27,3 +27,12 @@ spring:
     properties:
       # Ensures the message is acknowledged by Kafka brokers
       acks: all
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
