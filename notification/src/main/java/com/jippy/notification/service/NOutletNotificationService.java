@@ -17,18 +17,8 @@ public class NOutletNotificationService {
 
     @KafkaListener(topics = "new-orders", groupId = "outlet-group")
     public void sendNewOrderNotification(NOrderEvent orderEvent) {
-        String outletTopic = "";
 
-        try{
-            throw new NullPointerException();
-            //outletTopic = "outlet_" + orderEvent.getOutletId();
-           // logger.info("===================="+outletTopic);
-        }catch (NullPointerException e){
-
-        }
-
-
-        outletTopic = "outlet_" + orderEvent.getOutletId();
+        String outletTopic = "outlet_" + orderEvent.getOutletId();
         Message message = Message.builder()
                 .setTopic(outletTopic)
                 .setNotification(Notification.builder()
