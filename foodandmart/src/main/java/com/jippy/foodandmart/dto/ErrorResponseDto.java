@@ -18,7 +18,7 @@ public class ErrorResponseDto {
     @Schema(description = "Error Code of API")
     private HttpStatus errorCode;
 
-    @Schema(description = "Error Messsage of API")
+    @Schema(description = "Error Message of API")
     private String errorMessage;
 
     @Schema(description = "Time when error occures")

@@ -1,6 +1,7 @@
 package com.jippy.foodandmart.exception;
 
 import com.jippy.foodandmart.dto.ErrorResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -61,5 +62,19 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(PricingException.class)
+    public ResponseEntity<ErrorResponseDto> handlePricingException(
+            PricingException ex, HttpServletRequest req) {
+
+        return ResponseEntity.badRequest().body(
+                new ErrorResponseDto(
+                        req.getRequestURI(),
+                        HttpStatus.BAD_REQUEST,
+                        ex.getMessage(),
+                        LocalDateTime.now()
+                )
+        );
     }
 }
