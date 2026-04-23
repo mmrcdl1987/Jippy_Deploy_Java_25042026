@@ -1,15 +1,59 @@
-server:
-  port: 8080
 spring:
   application:
-    name: food and mart
+    name: jippy-fm
+
   datasource:
     url: jdbc:postgresql://localhost:5432/jippy_fm
     username: postgres
-    password: postgres
+    password: root123
     driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-test-query: SELECT 1
+      connection-timeout: 20000
+      idle-timeout: 600000
+      max-lifetime: 1500000
+      minimum-idle: 2
+      maximum-pool-size: 10
+      validation-timeout: 3000
+
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-        ddl-auto: update
-    show-sql: true
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: jippy_fm
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    time-zone: UTC
+
+#
+
+  #    enabled: true
+  #    schemas: jippy_fm
+  #    baseline-on-migrate: true
+  #    validate-on-migrate: false
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+logging:
+  level:
+    com.jippy: INFO
+    org.springframework.web: WARN
+    com.zaxxer.hikari: ERROR

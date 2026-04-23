@@ -6,17 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(
-        info = @Info(
-                title = "Food and Mart Microservice REST API's",
-                description = "Food and Mart Microservices includes creation of merchants,outlets,products",
-                version = "v1"
-        )
-)
+@OpenAPIDefinition(info = @Info(title = "Food and Mart Microservice REST API's", description = "Food and Mart Microservices includes creation of merchants,outlets,products", version = "v1"))
 public class FoodandmartApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FoodandmartApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(FoodandmartApplication.class, args);
+    }
 
 }
