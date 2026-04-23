@@ -1,29 +1,29 @@
 server:
   port: 8080
+
 spring:
   application:
     name: food and mart
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
 
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
+    hibernate:
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
         default_schema: jippy_fm
-        ddl-auto: update
-    show-sql: true
 
 eureka:
   instance:
     preferIpAddress: true
-  client:
-    fetchRegistry: true
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: http://localhost:8070/eureka/

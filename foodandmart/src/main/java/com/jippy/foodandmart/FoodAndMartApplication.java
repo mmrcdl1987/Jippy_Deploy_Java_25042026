@@ -4,21 +4,13 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients
-@OpenAPIDefinition(
-        info = @Info(
-                title = "Food and Mart Microservice REST API's",
-                description = "Food and Mart Microservices includes creation of merchants,outlets,products",
-                version = "v1"
-        )
-)
-public class FoodAndMartApplication {
+@OpenAPIDefinition(info = @Info(title = "Food and Mart Microservice REST API's", description = "Food and Mart Microservices includes creation of merchants,outlets,products", version = "v1"))
+public class FoodandmartApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FoodAndMartApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(FoodandmartApplication.class, args);
+    }
 
 }
