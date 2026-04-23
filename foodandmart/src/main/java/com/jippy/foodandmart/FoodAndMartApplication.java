@@ -15,10 +15,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
                 version = "v1"
         )
 )
-public class FoodandmartApplication {
+public class FoodAndMartApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FoodandmartApplication.class, args);
+		SpringApplication.run(FoodAndMartApplication.class, args);
 	}
 
 }
