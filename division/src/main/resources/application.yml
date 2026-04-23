@@ -1,5 +1,5 @@
 server:
-    port: 8082
+    port: 8081
 spring:
   application:
     name: division
@@ -16,6 +16,15 @@ spring:
       default_schema: jippy_division
       ddl-auto: update
     show-sql: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
 
 
 
