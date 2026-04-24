@@ -4,18 +4,18 @@ spring:
   application:
     name: customerandorder
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: postgres
+    # Syntax: ${VARIABLE_NAME:DEFAULT_VALUE}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/co_db}
+    username: ${SPRING_DATASOURCE_USERNAME:co_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:co_password}
     driver-class-name: org.postgresql.Driver
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
-        default_schema: jippy_customer_and_order
-      ddl-auto: update
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-
 management:
   endpoints:
     web:
