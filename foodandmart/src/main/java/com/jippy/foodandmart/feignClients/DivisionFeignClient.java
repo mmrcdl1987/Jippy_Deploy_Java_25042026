@@ -10,6 +10,6 @@ import java.util.List;
 @FeignClient(name = "division")
 public interface DivisionFeignClient {
 
-   @GetMapping("/api/coupons/getPriceModels")
+   @GetMapping(value = "/api/coupons/getPriceModels",consumes = "application/json")
     public ResponseEntity<List<DivPriceModelDto>> getPriceModels();
 }

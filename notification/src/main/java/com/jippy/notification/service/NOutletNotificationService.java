@@ -28,7 +28,7 @@ public class NOutletNotificationService {
                 .putData("orderId", String.valueOf(orderEvent.getOrderId())) // Data payload for the app to process
                 // .putData("click_action", "OPEN_ORDER_DETAIL")
                 .build();
-
+        // send notification to notification receipt table
 
         try {
             String response = FirebaseMessaging.getInstance().send(message);

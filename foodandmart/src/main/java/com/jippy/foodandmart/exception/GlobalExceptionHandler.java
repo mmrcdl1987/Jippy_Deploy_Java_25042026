@@ -1,7 +1,8 @@
 package com.jippy.foodandmart.exception;
 
-<<<<<<< HEAD
 import com.jippy.foodandmart.dto.ApiResponse;
+import com.jippy.foodandmart.dto.ErrorResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,9 +10,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,25 +75,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(ex.getMessage()));
     }
 
-    @ExceptionHandler(Exception.class)
+/*    @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex) {
         log.error("Unexpected server error: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("An internal server error occurred. Please try again later."));
-=======
-import com.jippy.foodandmart.dto.ErrorResponseDto;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
-
-import java.time.LocalDateTime;
-
-@ControllerAdvice
-public class GlobalExceptionHandler {
-    //        Handling Resource Bad-request in postman
+    }*/
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(
             ResourceNotFoundException ex,
@@ -154,6 +144,7 @@ public class GlobalExceptionHandler {
                         LocalDateTime.now()
                 )
         );
->>>>>>> origin/main
+
     }
+
 }
