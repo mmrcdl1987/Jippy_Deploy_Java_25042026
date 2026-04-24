@@ -31,9 +31,9 @@ spring:
           spring.json.value.default.type: "com.jippy.notification.dto.OrderEvent"
 
   # Custom Firebase Path
-  app:
-    firebase:
-      config-path: classpath:jippy-firebase-key.json
+ # app:
+  #  firebase:
+   #   config-path: classpath:jippy-firebase-key.json
 
 eureka:
   instance:
