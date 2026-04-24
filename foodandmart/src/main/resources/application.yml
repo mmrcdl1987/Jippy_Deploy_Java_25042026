@@ -4,26 +4,19 @@ server:
 spring:
   application:
     name: foodandmart
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: postgres
+datasource:
+    # Syntax: ${VARIABLE_NAME:DEFAULT_VALUE}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/fm_db}
+    username: ${SPRING_DATASOURCE_USERNAME:fm_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:fm_password}
     driver-class-name: org.postgresql.Driver
-
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
-
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    show-sql: true
     properties:
       hibernate:
-        default_schema: jippy_fm
-
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true    
 eureka:
   instance:
     preferIpAddress: true
