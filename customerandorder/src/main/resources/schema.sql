@@ -180,7 +180,8 @@ CREATE TABLE IF NOT EXISTS jippy_customer_and_order.orders(
     outlet_id integer NOT NULL,
     driver_id integer,
     order_status character varying(20) NOT NULL, -- placed, delivered, cancelled
-    delivery_address character varying(500) NOT NULL,
+    --delivery_address character varying(500) NOT NULL,
+    customer_delivery_address_id integer NOT NULL,
     customer_phone_number character varying(15) NOT NULL,
     preparation_time timestamp without time zone,
     estimated_delivery_time timestamp without time zone,
